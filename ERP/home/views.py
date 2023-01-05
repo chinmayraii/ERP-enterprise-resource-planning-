@@ -3,13 +3,16 @@ from .models import *
 from django.contrib import messages
 from django.db.models import Q
 
-def index(request):
-    data=Students.objects.all()
-    return render (request,'index.html',{'data':data})
+def course(request):
+    return render (request,('course.html'))
 
-def showall(request):
-    data=Students.objects.all()
-    return render (request,'index.html',{'data':data})    
+def showallstudent(request):
+    data=Student.objects.all()
+    return render (request,'student.html',{'data':data}) 
+
+def showallcourse(request):
+    stu=Course.objects.all()
+    return render (request,'course.html',{'stu':stu})        
 
 def addstudent(request):
     name=request.POST['name']
@@ -23,23 +26,46 @@ def addstudent(request):
     passoutyear=int(passoutyear)
     status=request.POST['status']
     address=request.POST['address']
-    if Students.objects.filter(email=email).exists():
+    if Student.objects.filter(email=email).exists():
         messages.error(request,'Email already exists')
-        data=Students.objects.all()
-        return render (request,'index.html',{'data':data})    
+        data=Student.objects.all()
+        return render (request,'student.html',{'data':data})    
     else:
-        Students.objects.create(name=name,branch=branch,course=course,mob=mob,email=email,qualification=qualification,passoutyear=passoutyear,status=status,address=address)
+        Student.objects.create(name=name,branch=branch,course=course,mob=mob,email=email,qualification=qualification,passoutyear=passoutyear,status=status,address=address)
         messages.success(request,'sucessfully added !!!!')
-        data=Students.objects.all()
-        return render (request,'index.html',{'data':data}) 
+        data=Student.objects.all()
+        return render (request,'student.html',{'data':data}) 
 
 def deletestudent(request):
     sid=request.GET['sid']
-    Students.objects.get(id=sid).delete()
-    data=Students.objects.all()
-    return render(request,"index.html",{'data':data}) 
+    Student.objects.get(id=sid).delete()
+    data=Student.objects.all()
+    return render(request,"student.html",{'data':data}) 
 
 def searchstudent(request):
     find=request.POST['name']
-    s=Students.objects.filter(Q(name=find) | Q(email=find) | Q(course=find) | Q(branch=find) | Q(status=find)).all()
-    return render(request,"index.html",{'data':s})            
+    s=Student.objects.filter(Q(name=find) | Q(email=find) | Q(course=find) | Q(branch=find) | Q(status=find) | Q(qualification=find)).all()
+    return render(request,"student.html",{'data':s})
+
+
+def updatestudent(request):
+    s=Student()
+    s.id=request.POST['id']
+    s.name=request.POST['name']
+    s.branch=request.POST['branch']
+    s.course=request.POST['course']
+    s.email=request.POST['email']
+    mob=request.POST['mob']
+    s.mob=int(mob)
+    s.qualification=request.POST['qualification']
+    passoutyear=request.POST['passoutyear']
+    s.passoutyear=int(passoutyear)
+    s.status=request.POST['status']
+    s.address=request.POST['address']
+    s.save()
+    data=Student.objects.all()
+    return render (request,'student.html',{'data':data})
+
+def up_course(request,uid):
+    res=Student.objects.get(id=uid)
+    return render(request,'updatestudent.html',{'i':res})                    
