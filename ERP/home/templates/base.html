@@ -26,14 +26,14 @@ crossorigin="anonymous"></script>
             </div>
             <hr>
             <div>
-              <form action="showallcourse" method="post" >
+              <form action="/showallcourse" method="post" >
                 {% csrf_token %}
               <button class="btn btn-dark text-white" type="submit">All Courses</button>
             </form>
             </div>
             <br>
             <div>
-              <form action="showallstudent" method="post" >
+              <form action="/showallstudent" method="post" >
                 {% csrf_token %}
               <button class="btn btn-dark text-white" type="submit">All Students</button>
             </form>
